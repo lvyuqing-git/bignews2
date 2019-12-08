@@ -55,4 +55,22 @@
         </div>
     </div>
 </body>
+<script src="./libs/jquery-1.12.4.min.js"></script>
+<script src="./libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="./libs/https.js"></script>
+<script>
+    $.ajax({
+        url : site.userInfo,
+        type : 'get',
+        headers : {
+        'Authorization' : localStorage.getItem('token'),
+        },
+        success : function(res){
+            $('.user_info img,.user_center_link img').attr('src',res.data.userPic);
+            $('.user_info span').html('欢迎&nbsp;&nbsp;'+res.data.nickname);
+        }
+
+    });
+
+</script>
 </html>
