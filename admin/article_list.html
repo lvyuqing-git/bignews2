@@ -69,11 +69,14 @@
                 </tbody>
             </table>
             <div class="row text-center">
+
+                <ul id="pagination-demo" class="pagination-sm"></ul>
             </div>
         </div>
     </div>
 </body>
 <script src="./libs/https.js"></script>
+<script src="./libs/jquery.twbsPagination.js"></script>
 <script type="text/html" id="tp">
     {{each data }}
         <tr>
@@ -95,17 +98,23 @@
     <option value="">所有分类</option>
     {{each data}}
         <option value="{{$value.id}}">{{$value.name}}</option>
-
     {{/each }}
-
-
 </script>
 <script>
     $(function () {
+
+        $.ajax({
+            url: window.site.category_list,
+            type: 'get',
+            success: function (res) {
+                $('#selCategory').html(template('tp2', res));
+            }
+        });
+
+
         let perpage = 10;
         let mypage = 1;
-        'aaaaaaaaa'
-        function getData(page) {
+        function getData(page, callback) {
 
             $.ajax({
                 url: window.site.article_query,
@@ -117,25 +126,61 @@
                     perpage: perpage,
                 },
                 success: function (res) {
-                    $('tbody').html(template('tp', res.data));
+
+                    if (res.code == 200) {
+                        $('tbody').html(template('tp', res.data));
+                        if (callback != null) {
+                            callback(res);
+                        }
+
+                    }
                 }
             });
         }
-        getData(mypage);
 
-        $.ajax({
-            url: window.site.category_list,
-            type: 'get',
-            success: function (res) {
-                console.log(res);
-                $('#selCategory').html(template('tp2', res));
-            }
+
+        getData(mypage, function (res) {
+            $('#pagination-demo').twbsPagination({
+                totalPages: res.data.totalPage,
+                visiblePages: 7,
+                onPageClick: function (event, page) {
+                    mypage = page;
+                    getData(page, null);
+                }
+            });
+
         });
-
 
         $('#btnSearch').on('click', function (event) {
             event.preventDefault();
-            getData(mypage);
+            getData(mypage, function (res) {
+                console.log(mypage);
+
+                $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1)
+                console.log(mypage);
+
+                
+
+            });
+        });
+
+
+        $('tbody').on('click', '.delete', function () {
+            let id = $(this).attr('data-id');
+            $.ajax({
+                url: site.article_delete,
+                type: 'post',
+                data: {
+                    id: id
+                },
+                success: function (res) {
+                    console.log(res);
+                    if (res.code == 204) {
+                        getData(mypage, null)
+                    }
+
+                }
+            });
         });
 
     });
