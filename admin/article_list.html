@@ -73,5 +73,73 @@
         </div>
     </div>
 </body>
+<script src="./libs/https.js"></script>
+<script type="text/html" id="tp">
+    {{each data }}
+        <tr>
+            <td>{{$value.title}}</td>
+            <td>{{$value.author}}</td>
+            <td>{{$value.category}}</td>
+            <td class="text-center">{{$value.date}}</td>
+            <td class="text-center">{{$value.state}}</td>
+            <td class="text-center">
+                <a href="article_edit.html" data-id="{{$value.id}}" class="btn btn-default btn-xs">编辑</a>
+                <a href="javascript:void(0);" data-id="{{$value.id}}" class="btn btn-danger btn-xs delete">删除</a>
+            </td>
+        </tr>
+    {{/each }}
+</script>
+
+
+<script type="text/html" id="tp2">
+    <option value="">所有分类</option>
+    {{each data}}
+        <option value="{{$value.id}}">{{$value.name}}</option>
+
+    {{/each }}
+
+
+</script>
+<script>
+    $(function () {
+        let perpage = 10;
+        let mypage = 1;
+        'aaaaaaaaa'
+        function getData(page) {
+
+            $.ajax({
+                url: window.site.article_query,
+                typye: 'get',
+                data: {
+                    type: $('#selCategory').val(),
+                    state: $('#selStatus').val(),
+                    page: page,
+                    perpage: perpage,
+                },
+                success: function (res) {
+                    $('tbody').html(template('tp', res.data));
+                }
+            });
+        }
+        getData(mypage);
+
+        $.ajax({
+            url: window.site.category_list,
+            type: 'get',
+            success: function (res) {
+                console.log(res);
+                $('#selCategory').html(template('tp2', res));
+            }
+        });
+
+
+        $('#btnSearch').on('click', function (event) {
+            event.preventDefault();
+            getData(mypage);
+        });
+
+    });
+
+</script>
 
 </html>
