@@ -86,7 +86,7 @@
             <td class="text-center">{{$value.date}}</td>
             <td class="text-center">{{$value.state}}</td>
             <td class="text-center">
-                <a href="article_edit.html" data-id="{{$value.id}}" class="btn btn-default btn-xs">编辑</a>
+                <a href="article_edit.html?id={{$value.id}}" data-id="{{$value.id}}" class="btn btn-default btn-xs edit">编辑</a>
                 <a href="javascript:void(0);" data-id="{{$value.id}}" class="btn btn-danger btn-xs delete">删除</a>
             </td>
         </tr>
@@ -155,12 +155,8 @@
             event.preventDefault();
             getData(mypage, function (res) {
                 console.log(mypage);
-
                 $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1)
                 console.log(mypage);
-
-                
-
             });
         });
 
@@ -182,6 +178,7 @@
                 }
             });
         });
+
 
     });
 
