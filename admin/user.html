@@ -43,12 +43,12 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">用户图标：</label>
                     <div class="col-sm-10">
-                       
+
                         <input style="display: none" name="userPic" type="file" id="exampleInputFile">
                         <!-- 给label标签的for属性赋值,值是input标签的id,那这样的话点击label就相当于点击了input -->
                         <br>
                         <label for="exampleInputFile">
-                                <img src="images/2.jpg" alt="" class="user_pic">
+                            <img src="images/2.jpg" alt="" class="user_pic">
                         </label>
                     </div>
                 </div>
@@ -81,29 +81,33 @@
                 for (let key in res.data) {
                     $('.' + key).val(res.data[key]);
                 }
-                $('.user_pic').attr('src',res.data.userPic);
+                $('.user_pic').attr('src', res.data.userPic);
 
 
             }
         });
-
-        $('#exampleInputFile').on('change',function(){
-
-            $('.user_pic').attr('src',URL.createObjectURL(this.files[0]));
+        let url;
+        $('#exampleInputFile').on('change', function () {
+            url = URL.createObjectURL(this.files[0])
+            $('.user_pic').attr('src', URL.createObjectURL(this.files[0]));
 
         });
 
-        $('.btn-edit').on('click',function(e){
+        $('.btn-edit').on('click', function (e) {
             e.preventDefault();
             $.ajax({
-                url : site.user_edit,
-                type : 'post',
-                data : new FormData(document.getElementById('form')),
-                contentType : false,
-                processData : false,
-                success : function(res){
+                url: site.user_edit,
+                type: 'post',
+                data: new FormData($('form')[0]),
+                contentType: false,
+                processData: false,
+                success: function (res) {
                     console.log(res);
-                    window.parent.$('.user_info img').attr('scr',);
+                    window.parent.$('.user_info img,.user_center_link img').attr('src',url);
+                    
+                    // window.parent.$('.user_info span').html('欢迎&nbsp;&nbsp;'+res.);
+
+                    // parent.window.location.reload();
                 }
             });
         });
