@@ -259,7 +259,7 @@
                 totalPages: res.data.totalPage,
                 visiblePages: 7,
                 onPageClick: function (event, page) {
-                    getDate(page,function(){});
+                    getDate(page, null);
                 }
             });
 
@@ -270,7 +270,6 @@
 
         $('#btnSearch').on('click', function (e) {
             e.preventDefault();
-            console.log('dsfds');
 
             // let id = $(this).attr('data-id');
             // $.ajax({
@@ -285,7 +284,9 @@
             //     }
             // });
 
-            getDate(page);
+            getDate(page, function (res) {
+                $('#pagination-demo').twbsPagination('changeTotalPages',res.data.totalPage,1);
+            });
 
 
         });
