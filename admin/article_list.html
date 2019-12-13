@@ -71,6 +71,8 @@
             <div class="row text-center">
 
                 <ul id="pagination-demo" class="pagination-sm"></ul>
+                <div id="tips">已经没有数据了，不要想哦</div>
+
             </div>
         </div>
     </div>
@@ -245,11 +247,23 @@
                     perpage: perpage,
                 },
                 success: function (res) {
-                    // console.log(res);
+
+                    console.log(res);
+
                     $('tbody').html(template('sousuo', res.data));
-                    if (callback != null) {
+
+                    if (callback != null && res.data.totalPage != 0) {
+                        $('#pagination-demo').show();
+                        $('#tips').show().hide();
                         callback(res);
+                    } else if (res.data.totalPage != 0 && res.data.totalCount != 0 && res.data.totalPage == mypage - 1) {
+                        mypage -= 1;
+                        $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, mypage);
+                    } else{
+                        $('#pagination-demo').hide();
+                        $('#tips').show();
                     }
+
                 },
             });
         }
@@ -259,10 +273,10 @@
                 totalPages: res.data.totalPage,
                 visiblePages: 7,
                 onPageClick: function (event, page) {
-                    getDate(page, null);
+                    mypage = page;
+                    getDate(page, function(){});
                 }
             });
-
         });
 
 
@@ -271,15 +285,14 @@
         $('#btnSearch').on('click', function (e) {
             e.preventDefault();
             getDate(page, function (res) {
+                console.log(res);
                 $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1);
             });
-
-
         });
 
 
         $('tbody').on('click', '.delete', function () {
-            
+
             $.ajax({
                 url: window.site.article_delete,
                 type: 'post',
@@ -288,7 +301,7 @@
                 },
                 success: function (res) {
                     console.log(res);
-                    getDate(page, null);
+                    getDate(mypage, null);
 
                 }
             });
