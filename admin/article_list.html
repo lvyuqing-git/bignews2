@@ -233,7 +233,7 @@
 
         let perpage = 10;
         let page = 1;
-        function getDate(page) {
+        function getDate(page, callback) {
 
             $.ajax({
                 url: window.site.article_query,
@@ -241,17 +241,54 @@
                 data: {
                     type: $('#selCategory').val(),
                     state: $('#selStatus').val(),
-                    page :page,
-                    perpage : perpage,
+                    page: page,
+                    perpage: perpage,
                 },
-                success : function(res){
+                success: function (res) {
                     // console.log(res);
-                    $('tbody').html(template('sousuo',res.data));
-                }
+                    $('tbody').html(template('sousuo', res.data));
+                    if (callback != null) {
+                        callback(res);
+                    }
+                },
             });
         }
         //文章搜索页面渲染
-        getDate(page);
+        getDate(page, function (res) {
+            $('#pagination-demo').twbsPagination({
+                totalPages: res.data.totalPage,
+                visiblePages: 7,
+                onPageClick: function (event, page) {
+                    getDate(page,function(){});
+                }
+            });
+
+        });
+
+
+        //文章筛选
+
+        $('#btnSearch').on('click', function (e) {
+            e.preventDefault();
+            console.log('dsfds');
+
+            // let id = $(this).attr('data-id');
+            // $.ajax({
+            //     url : window.site.article_delete,
+            //     type : 'post',
+            //     data : {
+            //         id :id,
+            //     },
+            //     success : function(res){
+            //         console.log(res);
+
+            //     }
+            // });
+
+            getDate(page);
+
+
+        });
 
     });
 
