@@ -270,26 +270,30 @@
 
         $('#btnSearch').on('click', function (e) {
             e.preventDefault();
-
-            // let id = $(this).attr('data-id');
-            // $.ajax({
-            //     url : window.site.article_delete,
-            //     type : 'post',
-            //     data : {
-            //         id :id,
-            //     },
-            //     success : function(res){
-            //         console.log(res);
-
-            //     }
-            // });
-
             getDate(page, function (res) {
-                $('#pagination-demo').twbsPagination('changeTotalPages',res.data.totalPage,1);
+                $('#pagination-demo').twbsPagination('changeTotalPages', res.data.totalPage, 1);
             });
 
 
         });
+
+
+        $('tbody').on('click', '.delete', function () {
+            
+            $.ajax({
+                url: window.site.article_delete,
+                type: 'post',
+                data: {
+                    id: $(this).attr('data-id'),
+                },
+                success: function (res) {
+                    console.log(res);
+                    getDate(page, null);
+
+                }
+            });
+        });
+
 
     });
 
